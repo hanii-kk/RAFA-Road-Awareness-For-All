@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Laporan Kondisi Jalan - RAFA</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #F5EBDD, #E9D8C0);
+      margin: 0;
+      padding: 2em;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #6C4A34;
+      margin-bottom: 1em;
+    }
+
+    .kotak-form {
+      background-color: #EADBC8; /* krem */
+      padding: 1.5em;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+
+    input, select, textarea {
+      padding: 0.9em;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+
+    button {
+      padding: 0.9em;
+      background-color: #6C4A34;
+      color: white;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #533725;
+    }
+
+    .status {
+      margin-top: 1em;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .kotak-laporan {
+      background-color: #C9D8C5; /* hijau sage */
+      margin-top: 2em;
+      padding: 1.5em;
+      border-radius: 15px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .back-btn {
+      margin-top: 2em;
+      display: inline-block;
+      background-color: #B08968;
+      color: white;
+      text-decoration: none;
+      padding: 0.8em 1.5em;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1em;
+      }
+
+      .kotak-form, .kotak-laporan {
+        padding: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📢 Laporan Kondisi Jalan</h1>
+
+    <div class="kotak-form">
+      <form id="laporForm">
+        <input type="text" name="nama" placeholder="Nama Pelapor" required />
+        <input type="text" name="lokasi" placeholder="Lokasi Kejadian" required />
+        <select name="jenis" required>
+          <option value="">Pilih Jenis Masalah</option>
+          <option value="Banjir">Banjir</option>
+          <option value="Macet">Macet</option>
+          <option value="Jalan Rusak">Jalan Rusak</option>
+          <option value="Kecelakaan">Kecelakaan</option>
+        </select>
+        <textarea name="keterangan" rows="3" placeholder="Keterangan Tambahan"></textarea>
+        <button type="submit">Kirim Laporan</button>
+      </form>
+      <div class="status" id="statusPesan"></div>
+    </div>
+
+    <div class="kotak-laporan">
+      <h2 style="text-align: center; color: #3E3E3E;">📄 Hasil Laporan Masuk</h2>
+      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRrDuHFEXwmEQ33UN6tmTTZR2AiuvGf13wDH2Ru8istC-bGBnxxFUFG9meK01HZKfAurM1-qj0zBg9X/pubhtml?gid=0&single=true&widget=true&headers=false"></iframe>
+    </div>
+
+    <a href="index.html" class="back-btn">⬅️ Kembali ke Beranda</a>
+  </div>
+
+  <script>
+    document.getElementById("laporForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+      fetch("https://script.google.com/macros/s/AKfycbz9fNbsFyeBOe-996rP0MZ3kxlbdV3fXlL-59oAEYmB-93lr5KG0jvnfbIPGDmZ7iFf/exec", {
+        method: "POST",
+        body: data,
+      })
+        .then((res) => res.text())
+        .then((msg) => {
+          document.getElementById("statusPesan").innerText = "✅ Laporan berhasil dikirim!";
+          form.reset();
+        })
+        .catch((err) => {
+          document.getElementById("statusPesan").innerText = "❌ Gagal mengirim laporan.";
+        });
+    });
+  </script>
+</body>
+</html>
